@@ -158,16 +158,18 @@ let target1;
 
 		function downloadAll() {
 			entries.forEach(async (entry) => {
-				try {
-					const blobURL = await model.getURL(entry, {
-						password: passwordInput.value,
-					});
-					downloadAnchor.href = blobURL;
-					downloadAnchor.download = entry.filename;
-					downloadAnchor.dispatchEvent(new MouseEvent('click'));
-				} catch (error) {
-					if (error.message != zip.ERR_ABORT) {
-						throw error;
+				if ( !entry.directory ) {
+					try {
+						const blobURL = await model.getURL(entry, {
+							password: passwordInput.value,
+						});
+						downloadAnchor.href = blobURL;
+						downloadAnchor.download = entry.filename;
+						downloadAnchor.dispatchEvent(new MouseEvent('click'));	
+					} catch (error) {
+						if (error.message != zip.ERR_ABORT) {
+							throw error;
+						}
 					}
 				}
 			});
