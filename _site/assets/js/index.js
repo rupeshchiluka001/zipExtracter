@@ -31,6 +31,8 @@ let target1;
 		const passwordInput = document.getElementById("password-input");
 		const inflateImplementationInput = document.getElementById("inflate-implementation-input");
 		const fileListContainer = document.getElementById('file-list-container');
+		const downloadButton = document.getElementById('downloadAll');
+		const downloadAnchor = document.getElementById('downloadIndividual');
 		let fileList = document.createElement('ul');
 		fileList.id = 'file-list';
 		fileListContainer.appendChild(fileList);;
@@ -41,6 +43,7 @@ let target1;
 		encodingInput.onchange = selectEncoding;
 		inflateImplementationInput.onchange = selectInflateImplementation;
 		appContainer.onclick = downloadFile;
+		downloadButton.onclick = downloadAll;
 		fileInputButton.onclick = () => fileInput.dispatchEvent(new MouseEvent("click"));
 		selectInflateImplementation();
 
@@ -66,6 +69,8 @@ let target1;
 
 		async function selectFile() {
 			try {
+				$('#file-list-container').show();
+				$('#downloadAll').show();
 				fileInputButton.disabled = true;
 				encodingInput.disabled = true;
 				selectedFile = fileInput.files[0];
@@ -148,6 +153,23 @@ let target1;
 			treeView.jstree();
 			treeView.on("ready.jstree", function (e, data) {
 				treeView.jstree('open_all');
+			});
+		}
+
+		function downloadAll() {
+			entries.forEach(async (entry) => {
+				try {
+					const blobURL = await model.getURL(entry, {
+						password: passwordInput.value,
+					});
+					downloadAnchor.href = blobURL;
+					downloadAnchor.download = entry.filename;
+					downloadAnchor.dispatchEvent(new MouseEvent('click'));
+				} catch (error) {
+					if (error.message != zip.ERR_ABORT) {
+						throw error;
+					}
+				}
 			});
 		}
 

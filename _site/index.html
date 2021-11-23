@@ -92,10 +92,15 @@
         <li>
             <label>
                 <span class="form-label">download uncompressed files:-</span>
-                <div id="file-list-container"></div>
+                <div id="downloadDiv">
+                    <button id="downloadAll" hidden>Download All</button>
+                </div>
+                <div id="file-list-container" hidden>
+                </div>
             </label>
         </li>
     </ol>
+    <a href="#" id="downloadIndividual" hidden></a>
 </div>
 
 <script src="/assets/js/zip-no-worker-inflate.min.js"></script>
